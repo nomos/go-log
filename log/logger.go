@@ -234,10 +234,29 @@ type ILogger interface {
 	Write(p []byte)(int,error)
 }
 
+type StdLogger interface {
+	Fatal(v ...interface{})
+	Fatalf(format string, v ...interface{})
+	Print(v ...interface{})
+	Printf(format string, v ...interface{})
+}
+
+var _ StdLogger = (*TestLogger)(nil)
+
 func NewAstilecTronLogger() *TestLogger {
 	ret := &TestLogger{}
 	ret._logger, _ = newLogConfig().Build(zap.AddCallerSkip(2))
 	return ret
+}
+
+func (this *TestLogger) Fatal(fields ...interface{}) {
+	return
+	this._logger.Fatal(fields[0].(string))
+}
+
+func (this *TestLogger) Fatalf(msg string, fields ...interface{}) {
+	return
+	this._logger.Fatal(fmt.Sprintf(msg, fields))
 }
 
 func (this *TestLogger) Print(fields ...interface{}) {
